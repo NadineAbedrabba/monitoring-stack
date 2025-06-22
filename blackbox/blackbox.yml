@@ -1,0 +1,26 @@
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+      method: GET
+      valid_status_codes: [200, 204]
+      no_follow_redirects: false
+      tls_config:
+        insecure_skip_verify: true
+
+  spring_health:
+    prober: http
+    timeout: 5s
+    http:
+      method: GET
+      valid_status_codes: [200]
+
+  http_simple:
+    prober: http
+    timeout: 10s
+    http:
+      method: GET
+      valid_status_codes: [200, 301, 302]
+      no_follow_redirects: false

@@ -1,0 +1,16 @@
+
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'monitoringagent911@gmail.com'
+  smtp_auth_username: 'monitoringagent911@gmail.com'
+  smtp_auth_password: 'Azertyuiop&12345'  
+  smtp_require_tls: true
+
+route:
+  receiver: 'email-alert'
+
+receivers:
+  - name: 'email-alert'
+    email_configs:
+      - to: 'monitoringagent911@gmail.com'
+        send_resolved: true

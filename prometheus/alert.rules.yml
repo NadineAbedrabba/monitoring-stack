@@ -1,15 +1,14 @@
-
 groups:
   - name: blackbox-alerts
     rules:
       - alert: GoogleDown
-        expr: probe_success{job="blackbox_google"} == 0
+        expr: probe_success{job="blackbox_google", instance="https://www.google.com"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
           summary: "Google est injoignable"
-          description: "Blackbox n'a pas pu accéder à Google"
+          description: "Blackbox n'a pas pu accéder à https://www.google.com"
 
       - alert: SpringServiceDown
         expr: probe_success{job="blackbox_springboot"} == 0
@@ -18,4 +17,5 @@ groups:
           severity: critical
         annotations:
           summary: "Service Spring Boot KO"
-          description: "Blackbox ne peut pas joindre le endpoint actuator"
+          description: "Le endpoint /actuator/health n'est pas joignable"
+

@@ -1,25 +1,25 @@
 
-
 services:
   nodeexporter:
     image: prom/node-exporter:latest
     ports:
       - 9100:9100
- 
+
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     ports:
       - 8080:8080
- 
+
 
   prometheus:
     image: prom/prometheus
+    ports:
+      - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
-    ports:
-      - "9090:9090"
+      - prometheus-data:/prometheus  
     depends_on:
       - blackbox
 
@@ -27,6 +27,8 @@ services:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana 
 
   alertmanager:
     image: prom/alertmanager
@@ -34,10 +36,19 @@ services:
       - "9093:9093"
     volumes:
       - ./prometheus/alertmanager.yml:/etc/alertmanager/config.yml
+      - alertmanager-data:/data  
 
   blackbox:
     image: prom/blackbox-exporter
     ports:
       - "9115:9115"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     volumes:
       - ./blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml
+
+volumes:
+  prometheus-data:
+  grafana-storage:
+  alertmanager-data:
