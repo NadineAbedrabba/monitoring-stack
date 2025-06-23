@@ -8,6 +8,8 @@ services:
       - "1521:1521"
     environment:
       - ORACLE_PASSWORD=oracle
+      - APP_USER=oracle
+      - APP_USER_PASSWORD=oracle
     volumes:
       - oracle-data:/opt/oracle/oradata
 
@@ -17,7 +19,8 @@ services:
     ports:
       - "9161:9161"
     environment:
-      - DATA_SOURCE_NAME=oracle/oracle@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oracle-db)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XEPDB1)))
+      - DATA_SOURCE_NAME=exporter_user/exporter_pw@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oracle-db)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XEPDB1)))
+      - COLLECTOR_DISABLED=asm_diskgroup
     depends_on:
       - oracle-db
 
@@ -33,6 +36,9 @@ services:
     depends_on:
       - oracle_exporter
 
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -40,6 +46,16 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+    command:
+      - "--config.file=/etc/alertmanager/config.yml"
 
 volumes:
   oracle-data:

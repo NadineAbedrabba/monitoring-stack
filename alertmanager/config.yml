@@ -2,7 +2,7 @@ global:
   smtp_smarthost: 'smtp.gmail.com:587'
   smtp_from: 'monitoringagent911@gmail.com'
   smtp_auth_username: 'monitoringagent911@gmail.com'
-  smtp_auth_password: 'Azertyuiop&12345'  # voir explication ci-dessous
+  smtp_auth_password: 'snewwsuaswynqgch'  
   smtp_require_tls: true
 
 route:
