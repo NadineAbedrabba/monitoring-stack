@@ -1,20 +1,11 @@
 groups:
-  - name: resource-alerts
+  - name: oracle_alerts
     rules:
-      - alert: HighCPUUsage
-        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100) > 80
-        for: 1m
+      - alert: OracleExporterDown
+        expr: up{job="oracle"} == 0
+        for: 30s
         labels:
-          severity: warning
+          severity: critical
         annotations:
-          summary: "High CPU usage on {{ $labels.instance }}"
-          description: "CPU usage is above 80% for 1 minute."
-
-      - alert: HighMemoryUsage
-        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 80
-        for: 1m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High Memory usage on {{ $labels.instance }}"
-          description: "Memory usage is above 80% for 1 minute."
+          summary: "Oracle Exporter down"
+          description: "L'exporter Oracle est inaccessible depuis 30 secondes."
